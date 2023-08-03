@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}
+Guess the Year!
+{% endblock title %}
+
+{% block content %}
+<main>
+    <div class="project-list">
+        <h1>Guess the Year!</h1>
+        <table>
+            <thead>
+                <th>Headlines From The New York Times</th>
+            </thead>
+            <tbody>
+                {% for headline in days_list %}
+                <tr>
+                    <td>
+                        {{ headline }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="guess-inputs">
+            <p>
+                <input class="input-element" type="text" id="year-input" placeholder="YYYY">
+                <button class="guess-button" onclick="checkYearInput()">Guess Year</button>
+            </p>
+            <!-- Add a div to display the onscreen message -->
+            <div id="message"></div>
+            <script>
+                function checkYearInput() {
+                    var userInput = document.getElementById("year-input").value;
+                    var expectedValue = "{{ year }}";
+                    var diff = userInput - expectedValue;
+                    var messageDiv = document.getElementById("message");
+                    if (userInput === expectedValue) {
+                        messageDiv.textContent = "You got it!";
+                    } else {
+                        messageDiv.textContent = "Not quite. You are " + diff + " years off";
+                    }
+                }
+            </script>
+        </div>
+    </div>
+</main>
+{% endblock content %}
