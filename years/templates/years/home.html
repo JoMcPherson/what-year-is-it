@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 
-{% load static %}
-
 {% block title %}
 Guess the Day!
 {% endblock title %}
+
 {% block content %}
 <main>
     <div class="project-list">
-        <h1>Guess the Day! Home page</h1>
+        <h1><a class="guess-button" href="http://localhost:8000/years/game" style="font-size: 24px; padding: 10px 20px;">Click to Play!</a></h1>
+        <div class="tenor-gif-embed" data-postid="6037089" data-share-method="host" data-aspect-ratio="1.33333" data-width="100%"><a href="https://tenor.com/view/robin-williams-gif-6037089">What Year Is It GIF</a>from <a href="https://tenor.com/search/robin+williams-gifs">Robin Williams GIFs</a></div> <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
     </div>
 </main>
 {% endblock content %}

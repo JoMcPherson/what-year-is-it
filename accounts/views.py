@@ -51,7 +51,7 @@ def signup(request):
 
                 # login the user with the user you just created
                 login(request, user)
-                return redirect("list_projects")
+                return redirect("year_headlines")
             else:
                 form.add_error("password", "the passwords do not match")
 
