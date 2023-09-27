@@ -1,30 +1,41 @@
 from django.shortcuts import render
 import requests
 from django.contrib.auth.decorators import login_required
-from bs4 import BeautifulSoup
 import random
-from django.contrib.auth.models import User
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
+API_KEY= os.getenv("NYT_API_KEY")
 # Create your views here.
+
 @login_required
 def headlines(request):
-    month = str(random.randint(1, 12)).zfill(2)
-    if month != "02":
-        day = str(random.randint(1, 30)).zfill(2)
-    else:
-        day = str(random.randint(1, 28)).zfill(2)
     year = str(random.randint(1901, 2022))
-    page = f"https://www.nytimes.com/search?dropmab=false&endDate={year}{month}{day}&query=&sort=best&startDate=19000101"
-    soup = BeautifulSoup(requests.get(page).content, "html.parser")
-    days_list = []
-    for h4 in soup.select("h4"):
-        text = h4.get_text(strip=True)
-        if str(year) not in text:
-            days_list.append(text)
-    print("day:" + day + " month:" + month + " year:" + year)
-    context = {"days_list": days_list, "day":day, "month": month, "year":year}
-    return render(request, "years/year_headlines.html", context)
+    print("year",year)
+    # Create the API request URL
+    api_url = f"https://api.nytimes.com/svc/archive/v1/{year}/1.json?api-key={API_KEY}"
 
+    # Send a GET request to the API URL
+    response = requests.get(api_url)
+
+    if response.status_code == 200:
+        # Parse the JSON response
+        data = response.json()
+
+        # Extract the headlines from the response
+        headlines_list = [doc['headline']['main'] for doc in data['response']['docs']]
+
+        # Randomly select 10 headlines
+        selected_headlines = random.sample(headlines_list, 10)
+
+        context = {"days_list": selected_headlines, "year": year}
+        return render(request, "years/year_headlines.html", context)
+    else:
+        # Handle the case where the API request fails
+        error_message = "Failed to retrieve headlines."
+        context = {"error_message": error_message}
+        return render(request, "error.html", context)
 
 @login_required
 def welcome_user(request):
